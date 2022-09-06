@@ -1,9 +1,6 @@
 from django.contrib import admin
-
 from .models import Student, Teacher
 
-# class PairsAdmin(admin.TabularInline):
-#     model = Pairs
 
 @admin.register(Student)
 class StudentAdmin(admin.ModelAdmin):

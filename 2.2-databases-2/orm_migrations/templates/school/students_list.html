@@ -5,15 +5,18 @@
 {% block content %}
 <div class="row">
   <ul>
- {% for student in object_list %}
-    <li>{{ student.name }} {{ student.group } <br> Преподаватель:
-        {% for teacher in student.teachers.all %}
-            <p>{{ teacher.name }}: {{ teacher.subject }}</p>
-        {% endfor %}</li>
+  {% for student in object_list %}
+    <li> <b>{{ student.name }} {{ student.group }}</b>
+    <br>
+    Преподаватель:
+      {% for teacher in student.teachers.all %}
+        {{ teacher.name }}: {{ teacher.subject }}
+      <br>
+      {% endfor %} </li>
+    <br>
   {% endfor %}
   </ul>
 </div>
 {% endblock %}
-
 
 
