@@ -28,11 +28,19 @@ class AdvertisementSerializer(serializers.ModelSerializer):
         return adv
 
     def validate(self, data):
-        if Advertisement.objects.filter(
+        quantity = Advertisement.objects.filter(
                 creator=self.context["request"].user,
                 status='OPEN'
-                ).count() >= 10:
+                ).count()
+        if self.context['request'].method in ['POST'] and quantity >= 10:
             raise ValidationError(
                 "You have more than 10 open advertisements"
+                )
+        elif ((self.context['request'].method in ['PATCH'])
+              and (quantity >= 10)
+              and ('status' in data)):
+            if data['status'] == 'OPEN':
+                raise ValidationError(
+                    "You have more than 10 open advertisements"
                 )
         return data
