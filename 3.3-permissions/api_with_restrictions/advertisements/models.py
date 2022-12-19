@@ -24,5 +24,6 @@ class Advertisement(models.Model):
         )
     favor_users = models.ManyToManyField(
         User,
-        related_name='favorite_advs'
+        related_name='favorite_advs',
+        blank=True
         )
