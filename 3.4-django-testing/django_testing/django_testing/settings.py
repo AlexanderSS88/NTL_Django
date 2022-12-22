@@ -25,7 +25,7 @@ SECRET_KEY = 'oaamn^2=a4%p57jkt%&6rcird)lb6-#fo)^6rram7d+_@=8e38'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -84,7 +84,7 @@ DATABASES = {
         'HOST': '127.0.0.1',
         'PORT': '5432',
         'USER': 'postgres',
-        'PASSWORD': 'Sonson7ok'
+        'PASSWORD': '...................'
     }
 }
 
@@ -132,3 +132,5 @@ REST_FRAMEWORK = {
 }
 
 MAX_STUDENTS_PER_COURSE = 20
+
+DEFAULT_AUTO_FIELD='django.db.models.AutoField'

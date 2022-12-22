@@ -1,5 +1,3 @@
-from django.conf import settings
-
 from students.models import Course, Student
 from rest_framework.test import APIClient
 from model_bakery import baker
@@ -20,8 +18,14 @@ def student_factory():
 @pytest.fixture
 def course_factory():
     def factory(*args, **kwargs):
-        return baker.make(Course, *args, **kwargs)
+        return baker.make(Course, *args, **kwargs, make_m2m=True)
     return factory
+
+@pytest.fixture
+def max_students(settings):
+    # settings.MAX_STUDENTS_PER_COURSE = 20
+    return settings.MAX_STUDENTS_PER_COURSE
+
 
 
 @pytest.mark.django_db
@@ -92,7 +96,9 @@ def test_update_course(client, course_factory):
     course = course_factory(_quantity=10)
     position = 'NETOLOGY'
     # Act
-    response = client.patch(f'/courses/{course[5].id}/', data={'name': position, 'students': []})
+    response = client.patch(f'/courses/{course[5].id}/',
+                            data={'name': position, 'students': []}
+                            )
     # Assert
     new_name = client.get(f'/courses/{course[5].id}/').json()
     assert response.status_code == 200
@@ -115,39 +121,10 @@ def test_delete_course(client, course_factory):
     assert len(new_quantity_courses) == len(course) - 1
 
 
-
-
 @pytest.mark.parametrize(
-    ,course_factory(_quantity=10))
-# @pytest.fixture
-# def max_students_number(settings):
-#     settings.MAX_STUDENTS_PER_COURSE = 20
-#     assert settings.MAX_STUDENTS_PER_COURSE
-#
-# def course_factory():
-#     def factory(*args, **kwargs):
-#         return baker.make(Course, *args, **kwargs)
-#     return factory
-#
-# def test_add_max_students(course_factory, max_students_number):
-#     # Arrange
-#     new_course = course_factory(_quantity=1)
-#     title_course = new_course[0].name
-#     for id in range(15):
-#         baker.make(title_course)
-#         @pytest.mark.parametrize(
-#     )
-#     course_factory(_quantity=15, name=title_course)
-#     # Act
-#     response = client.get('/courses/')
-#     assert response.status_code == 200
-#     data = response.json()
-#     assert len(data) == 1
-#     for pos in data[0]:
-#         print (pos['students'])
-#     assert data[0]['name'] == new_course[0].name
-
-
-    # students_bjects = student_factory(_quantity=10)
-    # assert max_students_number <= len(students_bjects)
-    #
+    'actual_quant,expec_result',
+    [(20, True), (19, True), (29, False)]
+    )
+def test_max_students_number(actual_quant, expec_result, max_students):
+    result = actual_quant <= max_students
+    assert result == expec_result
