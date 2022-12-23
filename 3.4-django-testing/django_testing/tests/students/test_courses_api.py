@@ -23,7 +23,6 @@ def course_factory():
 
 @pytest.fixture
 def max_students(settings):
-    # settings.MAX_STUDENTS_PER_COURSE = 20
     return settings.MAX_STUDENTS_PER_COURSE
 
 
@@ -33,7 +32,7 @@ def test_add_one_course(client, course_factory):
     #Arrange
     new_course = course_factory(_quantity=1)
     #Act
-    response = client.get('/courses/')
+    response = client.get(f'/courses/?id={new_course[0].id}')
     #Assert
     assert response.status_code == 200
     data = response.json()
